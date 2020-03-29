@@ -1,1 +1,3 @@
-This is the first test for git system.
+This is the first test for distributed git system.
+
+Second Test.
