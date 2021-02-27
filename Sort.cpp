@@ -60,6 +60,37 @@ void InsertSort(std::vector<T> vec) {
 	PrintVector(vec);
 }
 
+template<typename T>
+void MergeSort(std::vector<T>& vec, std::vector<T>& temp, int left, int right) {
+	if(left >= right) return;
+	int mid = (left + right) / 2;
+	MergeSort(vec, temp, left, mid);
+	MergeSort(vec, temp, mid + 1, right);
+
+	int k = left;
+	int i = left;
+	int j = mid + 1;
+	while(i <= mid && j <= right) {
+		if(vec[i] < vec[j]) {
+			temp[k++] = vec[i++];
+		}
+		else {
+			temp[k++] = vec[j++];
+		}
+	}
+	while(i <= mid) {
+		temp[k++] = vec[i++];
+	}
+	while(j <= right) {
+		temp[k++] = vec[j++];
+	}
+	k = left;
+	while(k <= right) {
+		vec[k] = temp[k];
+		++k;
+	}
+}
+
 int main() {
 	std::vector<int> vec = {1, 7, -9, 4, 5, 12, -4, 3, 8, 20, -4, -18};
 	std::cout << "Original vector: ";
@@ -68,6 +99,12 @@ int main() {
 	BubbleSort(vec);
 	SelectSort(vec);
 	InsertSort(vec);
+
+	std::vector<int> vec1(vec);
+	std::vector<int> temp(vec.size());
+	MergeSort(vec1, temp, 0, vec1.size() - 1);
+	std::cout << "Merge Sort ";
+	PrintVector(vec1);
 
 	return 0;
 }
