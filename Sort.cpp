@@ -10,13 +10,19 @@ void PrintVector(std::vector<T>& vec) {
 }
 
 template<typename T>
+void Swap(T& a, T& b) {
+	T temp;
+	temp = a;
+	a = b;
+	b = temp;
+}
+
+template<typename T>
 void BubbleSort(std::vector<T> vec) {
 	for(int i = 0; i < vec.size() - 1; ++i) {
 		for(int j = 0; j < vec.size() - i - 1; ++j) {
 			if(vec[j] > vec[j + 1]) {
-				T temp = vec[j + 1];
-				vec[j + 1] = vec[j];
-				vec[j] = temp;
+				Swap(vec[j], vec[j + 1]);
 			}
 		}
 	}
@@ -35,9 +41,7 @@ void SelectSort(std::vector<T> vec) {
 			}
 		}
 
-		T temp = vec[k];
-		vec[k] = vec[i];
-		vec[i] = temp;
+		Swap(vec[i], vec[k]);
 	}
 
 	std::cout << "Select Sort: ";
@@ -91,20 +95,49 @@ void MergeSort(std::vector<T>& vec, std::vector<T>& temp, int left, int right) {
 	}
 }
 
+template<typename T>
+void QuickSort(std::vector<T>& vec, int lo, int hi) {
+	if(lo >= hi) return;
+	
+	int i = lo;
+	int j = hi;
+	T pivot = vec[lo];
+
+	while(i != j) {
+		while(i < j && vec[j] >= pivot) --j;
+		while(i < j && vec[i] <= pivot) ++i;
+
+		if(i < j) {
+			Swap(vec[i], vec[j]);
+		}
+	}
+	Swap(vec[j], vec[lo]);
+
+	QuickSort(vec, lo, j - 1);
+	QuickSort(vec, j + 1, hi);
+}
+
 int main() {
-	std::vector<int> vec = {1, 7, -9, 4, 5, 12, -4, 3, 8, 20, -4, -18};
+	std::vector<int> vec = {1, 7, -9, 4, 5, 12, -4, 3, 7, 8, 20, -4, -18, -9};
 	std::cout << "Original vector: ";
 	PrintVector(vec);
 
+	// N^2 complexity
 	BubbleSort(vec);
 	SelectSort(vec);
 	InsertSort(vec);
 
+	// N*log(N) complexity
 	std::vector<int> vec1(vec);
 	std::vector<int> temp(vec.size());
 	MergeSort(vec1, temp, 0, vec1.size() - 1);
 	std::cout << "Merge Sort ";
 	PrintVector(vec1);
+
+	std::vector<int> vec2(vec);
+	QuickSort(vec2, 0, vec2.size() - 1);
+	std::cout << "Quick Sort ";
+	PrintVector(vec2);
 
 	return 0;
 }
